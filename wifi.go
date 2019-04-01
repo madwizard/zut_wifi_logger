@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"log"
 	"os/exec"
+	"strings"
 )
 
 func readWifiList(NIC string) (string, string){
@@ -21,4 +22,9 @@ func readWifiList(NIC string) (string, string){
 
 	return string(stdout.Bytes()), string(stderr.Bytes())
 
+}
+
+func wifiInfo(wifilist string) (string, string, string) {
+	temp := strings.Split(wifilist, "\n")
+	return
 }
