@@ -6,10 +6,21 @@ import (
 )
 
 func main() {
+	fmt.Println("=====================================")
+	fmt.Println("Initialising devices.")
+
 	port, buff := InitGPS("/dev/ttyUSB0")
 	defer port.Close()
 
-	for {
+	fmt.Println("=====================================")
+	fmt.Println("Listing WiFis:")
+	out, _ := readWifiList("wlp2s0")
+
+	fmt.Println(out)
+	fmt.Println("=====================================")
+	fmt.Println("Position:")
+
+	for i := 0; i < 10; i++ {
 		n, err := port.Read(buff)
 		if err != nil {
 			log.Fatal(err)
@@ -18,6 +29,7 @@ func main() {
 		if n == 0 {
 			fmt.Println("\nEOF")
 		}
-		fmt.Println("%v", string(buff[:n]))
+		fmt.Println("=====================================")
+		fmt.Println(string(buff[:n]))
 	}
 }
