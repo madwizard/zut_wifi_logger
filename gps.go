@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"go.bug.st/serial.v1"
+	serial "go.bug.st/serial.v1"
 )
 
-func InitGPS(portDevice string) (*serial.Port, []byte) {
+func InitGPS(portDevice string) (serial.Port, []byte) {
 
 	mode := &serial.Mode{
 		BaudRate: 115200,
@@ -28,5 +28,5 @@ func InitGPS(portDevice string) (*serial.Port, []byte) {
 
 	buff := make([]byte, 400)
 
-	return &port, &buff
+	return port, buff
 }
