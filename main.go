@@ -1,16 +1,22 @@
 package main
 
+/*
+#cgo CFLAGS: -I./cinclude
+#cgo LDFLAGS: -L./dynlib/ -lm -liw
+#include "iwlib.h"
+*/
+import "C"
+
 import (
 	"fmt"
-	"log"
 )
 
 func main() {
 	fmt.Println("=====================================")
 	fmt.Println("Initialising devices.")
 
-	port, buff := InitGPS("/dev/ttyUSB0")
-	defer port.Close()
+	//port, buff := InitGPS("/dev/ttyUSB0")
+	//defer port.Close()
 
 	fmt.Println("=====================================")
 	fmt.Println("Listing WiFis:")
@@ -19,7 +25,7 @@ func main() {
 	fmt.Println(out)
 	fmt.Println("=====================================")
 	fmt.Println("Position:")
-
+/*
 	for i := 0; i < 10; i++ {
 		n, err := port.Read(buff)
 		if err != nil {
@@ -32,4 +38,7 @@ func main() {
 		fmt.Println("=====================================")
 		fmt.Println(string(buff[:n]))
 	}
+*/
+	result := C.iw_get_kernel_we_version()
+	fmt.Println(result)
 }
