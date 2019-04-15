@@ -14,7 +14,7 @@ func TestReadWiFiList(t *testing.T) {
 	}
 }
 
-func TestgetKernelWEVersion(t *testing.T) {
+func TestGetKernelWEVersion(t *testing.T) {
 	out := getKernelWEVersion()
 	expected := 22
 	if out != expected {
