@@ -1,5 +1,12 @@
 package main
 
+/*
+#cgo CFLAGS: -I./cinclude
+#cgo LDFLAGS: -L./dynlib/ -lm -liw
+#include "iwlib.h"
+*/
+import "C"
+
 import
 (
 	"bytes"
@@ -7,7 +14,7 @@ import
 	"os/exec"
 )
 
-func readWifiList(NIC string) (string, string){
+func readWiFiList(NIC string) (string, string){
 	cmd := exec.Command("/usr/sbin/iwlist", NIC, "scanning")
 
 	var stdout, stderr bytes.Buffer
@@ -21,8 +28,13 @@ func readWifiList(NIC string) (string, string){
 	}
 
 	return string(stdout.Bytes()), string(stderr.Bytes())
-
 }
+
+func getKernelWEVersion() (int) {
+	return int(C.iw_get_kernel_we_version())
+}
+
+
 /*
 func wifiInfo(wifilist string) (string, string, string) {
 	temp := strings.Split(wifilist, "\n")

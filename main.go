@@ -1,12 +1,6 @@
 package main
 
-/*
-#cgo CFLAGS: -I./cinclude
-#cgo LDFLAGS: -L./dynlib/ -lm -liw
-#include "iwlib.h"
-*/
 import "C"
-
 import (
 	"fmt"
 )
@@ -20,7 +14,7 @@ func main() {
 
 	fmt.Println("=====================================")
 	fmt.Println("Listing WiFis:")
-	out, _ := readWifiList("wlp2s0")
+	out, _ := readWiFiList("wlp2s0")
 
 	fmt.Println(out)
 	fmt.Println("=====================================")
@@ -39,6 +33,5 @@ func main() {
 		fmt.Println(string(buff[:n]))
 	}
 */
-	result := C.iw_get_kernel_we_version()
-	fmt.Println(result)
+
 }
