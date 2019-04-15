@@ -27,7 +27,7 @@ func readWiFiList(NIC string) (string, string){
 		log.Fatalf("cmd.Run() failed with error %s\n", err)
 	}
 
-	return string(stdout.Bytes()), string(stderr.Bytes())
+	return string(stdout.String()), string(stderr.String())
 }
 
 func getKernelWEVersion() (int) {

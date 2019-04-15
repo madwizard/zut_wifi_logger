@@ -5,9 +5,12 @@ import (
 )
 
 func TestReadWiFiList(t *testing.T) {
-	out, _ := readWiFiList("wlp2s0")
+	out, err := readWiFiList("wlp4s0")
+	if err != "" {
+		t.Errorf("readWiFiList returned error '%s'", err)
+	}
 	if out == "" {
-		t.Error("readWifiList returned empty list")
+		t.Errorf("readWiFiList returned empty list")
 	}
 }
 
