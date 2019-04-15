@@ -1,0 +1,14 @@
+# gowifiscanner DB structure
+
+## WiFi
+* ID (int)
+* SCAN_ID (TBD)
+* SSID (STRING)
+* STRNGTH (INT)
+* AP_HW_ADDR (STRING)
+* SCAN_TIMESTAMP (TIME)
+
+## SCAN_SESSION
+* SCAN_ID (TBD)
+* SCAN_START (TIME)
+* SCAN_END (TIME)
