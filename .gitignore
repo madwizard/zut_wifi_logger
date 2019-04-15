@@ -13,3 +13,5 @@
 
 # Main binary
 main
+
+.idea/*
