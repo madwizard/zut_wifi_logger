@@ -12,5 +12,5 @@ func main() {
 	http.HandleFunc("/data", sendData)
 	http.HandleFunc("/startScan", startScanning)
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServeTLS(":8080", "docs/cert.pem", "docs/key.pem", nil))
 }
