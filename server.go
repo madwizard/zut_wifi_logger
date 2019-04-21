@@ -18,5 +18,7 @@ func startScanning(w http.ResponseWriter, r *http.Request) {
 
 func sendData(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Sending data")
-	fmt.Fprint(w, "Sending data")
+	fmt.Fprint(w, "SSID: biuro\n")
+	fmt.Fprint(w, "Signal strength: 20\n")
+	fmt.Fprint(w, "GPS: ...")
 }
