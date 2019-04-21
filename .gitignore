@@ -12,6 +12,9 @@
 *.out
 
 # Main binary
+gowifiscanner
 main
+
+.idea/workspace.xml
 
 .idea/workspace.xml
