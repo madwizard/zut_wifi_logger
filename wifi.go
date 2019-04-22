@@ -7,6 +7,16 @@ package main
 */
 import "C"
 
+type wifiData struct {
+	essid string
+	mac string
+	freq string
+	siglvl int8
+	qual int16
+	enc bool
+	bitrates []int16
+}
+
 func readWiFiList(NIC string) (string, string){
 /*	p := C.malloc(C.wireless_scan_head)
 	defer C.free(p)

@@ -6,6 +6,11 @@ import (
 	serial "go.bug.st/serial.v1"
 )
 
+type gpsData struct {
+	longitude string
+	latitude string
+}
+
 func InitGPS(portDevice string) (serial.Port, []byte) {
 
 	mode := &serial.Mode{
