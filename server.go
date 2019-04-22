@@ -17,7 +17,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Home page")
 }
 
-func startScanning(w http.ResponseWriter, r *http.Request, sendData chan <- string, stopRequest <- chan bool) {
+func startScanning(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Starting scanning")
 	fmt.Fprint(w, "Starting scan\n")
 	fmt.Fprint(w, "Scanning")
