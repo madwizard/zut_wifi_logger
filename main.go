@@ -1,16 +1,20 @@
 package main
 
-import
-(
-	"log"
+import (
+	"github.com/goji/httpauth"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
 func main() {
 
-	http.HandleFunc("/", homePage)
-	http.HandleFunc("/data", sendData)
-	http.HandleFunc("/startScan", startScanning)
+	r := mux.NewRouter()
 
-	log.Fatal(http.ListenAndServeTLS(":8080", "docs/cert.pem", "docs/key.pem", nil))
+	r.HandleFunc("/", home)
+	r.HandleFunc("/status", status)
+	http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
+	http.Handle("/status", httpauth.SimpleBasicAuth("user", "pass")(r))
+
+	http.ListenAndServe(":8080", nil)
+
 }

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" http-equiv="refresh" content="30">
+    <title>Status</title>
+</head>
+<body>
+{{if .WiFiScanUp}}
+    <bold>WiFi Scan is UP</bold><br />
+{{else}}
+    <bold>WiFi Scan is not working</bold><br />
+{{end}}
+{{if .GPSScanUp}}
+    <bold>GPD Scan is UP</bold><br />
+{{else}}
+    <bold>GPS Scan is not working</bold><br />
+{{end}}
+{{.Timestamp}}
+</body>
+</html>

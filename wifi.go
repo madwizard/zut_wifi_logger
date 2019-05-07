@@ -1,25 +1,22 @@
 package main
 
-/*
-#cgo CFLAGS: -I./cinclude
-#cgo LDFLAGS: -L./dynlib/ -lm -liw
-#include "iwlib.h"
-*/
-import "C"
+import (
+	"bytes"
+	"log"
+	"os/exec"
+)
 
 type wifiData struct {
-	essid string
-	mac string
-	freq string
-	siglvl int8
-	qual int16
-	enc bool
-	bitrates []int16
+	ESSID string `json:"ESSID"`
+	MAC string	`json:"MAC"`
+	Freq string `json:"freq"`
+	SigLvl int8 `json:"siglvl"`
+	Qual int16 `json:"qual"`
+	Enc bool `json:"enc"`
+	BitRates []int16 `json:"bitrates"`
 }
 
-func readWiFiList(NIC string) (string, string){
-/*	p := C.malloc(C.wireless_scan_head)
-	defer C.free(p)
+func (w *wifiData) readWiFiList(NIC string) (string, string){
 
 	cmd := exec.Command("/usr/sbin/iwlist", NIC, "scanning")
 
@@ -34,38 +31,14 @@ func readWiFiList(NIC string) (string, string){
 	}
 
 	return string(stdout.String()), string(stderr.String())
-*/
 
-
-return "", ""
 }
 
-func wirelessScan() int {
+func (w *wifiData) parseWiFiData(NIC string) {
+	_, err := w.readWiFiList(NIC)
+	if err != "" {
+		log.Fatalf("readWiFiList failed with error %s\n", err)
+	}
 
-	/*
-	p := C.malloc(unsafe.Pointer(C.wireless_scan_head{}))
-	defer C.free(p)
 
-	iface := C.CString("wlp4s0")
-	sk := iwSocketsOpen()
-	weVersion := getKernelWEVersion()
-
-	ret := int(C.iw_process_scan(_Ctype_int(sk), iface, _Ctype_int(weVersion), unsafe.Pointer(p)))
- 	*/
-	ret := 1
-	return ret
-}
-
-func getKernelWEVersion() (int) {
-	//return int(C.iw_get_kernel_we_version())
-	return 1
-}
-
-func iwSocketsOpen() int {
-	// return int(C.iw_sockets_open())
-	return 1
-}
-
-func iwSocketsClose(skfd int) {
-	// C.iw_sockets_close(_Ctype_int(skfd))
 }
