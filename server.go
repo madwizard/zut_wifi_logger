@@ -14,9 +14,6 @@ type ServerStatus struct {
 	Timestamp time.Time
 }
 
-var Username = string("user")
-var Password = string("pass")
-
 func home(w http.ResponseWriter, r *http.Request) {
 	data := ServerStatus{true, true, time.Now()}
 	tmpl := template.Must(template.ParseFiles("templates/index.html"))

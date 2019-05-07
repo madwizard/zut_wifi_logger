@@ -13,7 +13,7 @@ func main() {
 	r.HandleFunc("/", home)
 	r.HandleFunc("/status", status)
 	http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
-	http.Handle("/status", httpauth.SimpleBasicAuth("user", "pass")(r))
+	// http.Handle("/status", httpauth.SimpleBasicAuth("user", "pass")(r))
 
 	http.ListenAndServe(":8080", nil)
 
