@@ -1,0 +1,36 @@
+          Cell 18 - Address: 88:AD:44:CC:AA:33
+                    Channel:128
+                    Frequency:5.64 GHz (Channel 128)
+                    Quality=61/70  Signal level=-49 dBm
+                    Encryption key:on
+                    ESSID:"very_nice_essid"
+                    Bit Rates:6 Mb/s; 9 Mb/s; 12 Mb/s; 18 Mb/s; 24 Mb/s
+                              36 Mb/s; 48 Mb/s; 54 Mb/s
+                    Mode:Master
+                    Extra:tsf=000000096c1d9055
+                    Extra: Last beacon: 517ms ago
+                    IE: Unknown: 00106D756C74696D656469615F626975726F
+                    IE: Unknown: 01088C129824B048606C
+                    IE: Unknown: 050400010100
+                    IE: Unknown: 073C4445202401172801172C01173001173401173801173C011740011764011E68011E6C011E70011E74011E78011E7C011E80011E84011E88011E8C011E
+                    IE: Unknown: 200100
+                    IE: Unknown: 23021700
+                    IE: IEEE 802.11i/WPA2 Version 1
+                        Group Cipher : TKIP
+                        Pairwise Ciphers (2) : CCMP TKIP
+                        Authentication Suites (1) : PSK
+                    IE: Unknown: 0B0502000C0000
+                    IE: Unknown: 46057208010000
+                    IE: Unknown: 2D1AAD0917FFFFFF0000000000000000000000000000000000000000
+                    IE: Unknown: 3D1680080000000000000000000000000000000000000000
+                    IE: Unknown: 7F080400080000000040
+                    IE: Unknown: BF0CB259820FEAFF0000EAFF0000
+                    IE: Unknown: C0050080000000
+                    IE: Unknown: C3020002
+                    IE: Unknown: DD310050F204104A0001101044000102104700106D9DAC7326FC6247254869D63563E2A0103C0001031049000600372A000120
+                    IE: Unknown: DD090010180202001C0000
+                    IE: WPA Version 1
+                        Group Cipher : TKIP
+                        Pairwise Ciphers (2) : CCMP TKIP
+                        Authentication Suites (1) : PSK
+                    IE: Unknown: DD180050F20201018C0003A4000027A4000042435E0062322F00
