@@ -15,7 +15,7 @@ type wifiData struct {
 	Freq string `json:"freq"`			// Frequency
 	SigLvl string `json:"siglvl"`		// SignalLevel
 	Qual string `json:"qual"`			// Quality
-	Enc bool `json:"enc"`				// Encryption key
+	Enc string `json:"enc"`				// Encryption key
 	Channel int `json:"channel"`		// Channel
 	Mode string `json:"mode"`			// Mode
 	IEEE string `json:"IEEE"`			// IEEE
@@ -50,7 +50,13 @@ func (w *wifiData) pack(input string) {
 			w.Freq = returnData(line, "Frequency:")
 		}
 		if strings.Contains(line, "Quality") {
-			w.Qual = returnData(line, "Quality=")
+			continue // TBD - Quality=62/70  Signal level=-48 dBm
+		}
+		if strings.Contains(line, "Encryption") {
+			w.Enc = returnData(line, "Encryption key:")
+		}
+		if strings.Contains(line, "ESSID") {
+			w.ESSID = returnData(line, "ESSID:")
 		}
 	} // End of for
 }
