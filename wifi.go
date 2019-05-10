@@ -2,27 +2,36 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
 // Example scanned data is in docs/example_WiFiScanData
 type wifiData struct {
-	ESSID string `json:"ESSID"` 	// ESSID
-	MAC string	`json:"MAC"`		// Address
-	Freq string `json:"freq"`		// Frequency
-	SigLvl string `json:"siglvl"`	// Singla Level
-	Qual int16 `json:"qual"`		//
-	Enc bool `json:"enc"`
-	BitRates []int16 `json:"bitrates"`
-	Channel int8 `json:"channel"`
-
+	ESSID string `json:"ESSID"` 		// ESSID
+	MAC string	`json:"MAC"`			// Address
+	Freq string `json:"freq"`			// Frequency
+	SigLvl string `json:"siglvl"`		// SignalLevel
+	Qual string `json:"qual"`			// Quality
+	Enc bool `json:"enc"`				// Encryption key
+	Channel int `json:"channel"`		// Channel
+	Mode string `json:"mode"`			// Mode
+	IEEE string `json:"IEEE"`			// IEEE
+	Bitrates string `json:"bitrates"`	// bitrates
+	WPA string `json:"wpa"`				// WPA version
 }
 
+func returnData(input string, mask string) string {
+	var tmp []string
+	if strings.Contains(input, mask) {
+		tmp = strings.Split(input, mask)
+	}
+	return tmp[1]
+}
 // pack packs data from input to struct
-func (w *wifiData) pack(input string)  {
+func (w *wifiData) pack(input string) {
 
 	lines := strings.Split(input, "\n")
 
@@ -31,8 +40,19 @@ func (w *wifiData) pack(input string)  {
 		if strings.Contains(line, "IE: Unknown") || strings.Contains(line, "Scan completed") {
 			continue
 		}
-		fmt.Println(line)
-	}
+		if strings.Contains(line, "Address: ") {
+			w.MAC = returnData(line, "Address: ")
+		}
+		if strings.Contains(line, "Channel:") {
+			w.Channel, _ = strconv.Atoi(returnData(line, "Channel:"))
+		}
+		if strings.Contains(line, "Frequency:") {
+			w.Freq = returnData(line, "Frequency:")
+		}
+		if strings.Contains(line, "Quality") {
+			w.Qual = returnData(line, "Quality=")
+		}
+	} // End of for
 }
 
 // readList calls iwlist command and reads in scanned data

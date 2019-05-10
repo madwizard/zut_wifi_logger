@@ -29,9 +29,9 @@ func main() {
 	http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
 	// http.Handle("/status", httpauth.SimpleBasicAuth("user", "pass")(r))
 
-	var data *wifiData
+	var data wifiData
 
-	WiFiParse("wlp4s0", data)
+	WiFiParse("wlp4s0", &data)
 
 	http.ListenAndServe(":8080", nil)
 
