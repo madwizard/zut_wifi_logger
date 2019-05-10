@@ -26,8 +26,8 @@ func main() {
 
 	r.HandleFunc("/", home)
 	r.HandleFunc("/status", status)
+	r.HandleFunc("/data", data)
 	http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
-	// http.Handle("/status", httpauth.SimpleBasicAuth("user", "pass")(r))
 
 	var data wifiData
 

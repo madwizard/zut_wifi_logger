@@ -14,6 +14,10 @@ type ServerStatus struct {
 	Timestamp time.Time
 }
 
+type scannedData struct {
+	Scanned string
+}
+
 func home(w http.ResponseWriter, r *http.Request) {
 	data := ServerStatus{true, true, time.Now()}
 	tmpl := template.Must(template.ParseFiles("templates/index.html"))
@@ -29,4 +33,13 @@ func status(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl.Execute(w, serverStatus)
+}
+
+func data(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/data.html"))
+
+	scannedData := scannedData {
+		Scanned: "wlp4s0    Scan completed :\n	Cell 01 - Address: 88:AD:43:F9:6A:BC",
+	}
+	tmpl.Execute(w, scannedData)
 }
