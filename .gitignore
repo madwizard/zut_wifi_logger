@@ -15,4 +15,8 @@
 gowifiscanner
 main
 
+# some trash made by GoLand
 .idea/
+pkg/
+src/
+
