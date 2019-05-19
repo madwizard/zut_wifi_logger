@@ -1,12 +1,7 @@
 {{template "header"}}
 
 <p>WiFi Mapper - Current data</p>
-<ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/status">Server status</a></li>
-    <li><a href="/data">Current scan data</a></li>
-    <li><a href="/download">Download scanned data</a></li>
-</ul>
+{{template "nav-main"}}
 {{.Scanned}}
 
 {{template "footer"}}

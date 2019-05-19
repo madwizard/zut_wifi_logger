@@ -1,7 +1,7 @@
 package main
 
 import (
-	"html/template"
+	"log"
 	"net/http"
 	"time"
 )
@@ -20,26 +20,41 @@ type scannedData struct {
 
 func home(w http.ResponseWriter, r *http.Request) {
 	data := ServerStatus{true, true, time.Now()}
-	tmpl := template.Must(template.ParseFiles("templates/index.html"))
-	tmpl.Execute(w, data)
-
+	err := tmpl.ExecuteTemplate(w, "index.html", data)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
 
 func status(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/status.html"))
 	serverStatus := ServerStatus{
 		WiFiScanUp: true,
 		GPSScanUp: true,
 	}
 
-	tmpl.Execute(w, serverStatus)
+	err := tmpl.ExecuteTemplate(w, "status.html", serverStatus)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
 
 func data(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("templates/data.html"))
-
 	scannedData := scannedData {
 		Scanned: "wlp4s0    Scan completed :\n	Cell 01 - Address: 88:AD:43:F9:6A:BC",
 	}
-	tmpl.Execute(w, scannedData)
+	err := tmpl.ExecuteTemplate(w, "data.html", scannedData)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+}
+
+func NotFound(w http.ResponseWriter, r *http.Request) {
+	err := tmpl.ExecuteTemplate(w, "404.html", nil)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
