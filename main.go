@@ -31,7 +31,7 @@ func main() {
 
 	// This needs to be configurable
 	// By arguments, config file or DB
-	WIFI := "wlp4s0"
+	WIFI := "wlp0s20f3"
 
 	r := mux.NewRouter()
 
