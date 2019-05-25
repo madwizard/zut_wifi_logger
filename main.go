@@ -29,6 +29,10 @@ func init() {
 
 func main() {
 
+	// This needs to be configurable
+	// By arguments, config file or DB
+	WIFI := "wlp4s0"
+
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", home)
@@ -39,7 +43,7 @@ func main() {
 
 	var data wifiData
 
-	WiFiParse("wlp4s0", &data)
+	WiFiParse(WIFI, &data)
 
 	http.ListenAndServe(":8080", nil)
 
