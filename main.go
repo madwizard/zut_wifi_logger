@@ -4,6 +4,7 @@ import (
 	"github.com/goji/httpauth"
 	"github.com/gorilla/mux"
 	"html/template"
+	"log"
 	"net/http"
 )
 
@@ -31,7 +32,10 @@ func main() {
 
 	// This needs to be configurable
 	// By arguments, config file or DB
-	WIFI := "wlp0s20f3"
+	WIFI, err := setWiFiInterface("config")
+	if err != nil {
+		log.Fatal("Can't read config file!")
+	}
 
 	r := mux.NewRouter()
 
