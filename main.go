@@ -4,7 +4,6 @@ import (
 	"github.com/goji/httpauth"
 	"github.com/gorilla/mux"
 	"html/template"
-	"log"
 	"net/http"
 	"time"
 )
@@ -29,6 +28,8 @@ var tmpl *template.Template
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("templates/*.html"))
+
+	initDB()
 }
 
 func main() {
@@ -42,15 +43,8 @@ func main() {
 	r.NotFoundHandler = http.HandlerFunc(NotFound)
 	http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
 
-	// This needs to be configurable
-	// By arguments, config file or DB
-	WIFI, err := setWiFiInterface("config")
-	if err != nil {
-		log.Fatal("Can't read config file!")
-	}
-
 	go Scanner(stopScanner)
-	WiFiParse(WIFI, &ScannedData)
+
 	time.Sleep(5 * time.Second)
 	stopScanner <- true
 

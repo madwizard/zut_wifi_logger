@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
 )
-
 func initDB() {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
 	statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS wifidata (id INTEGER PRIMARY KEY, essid TEXT, mac TEXT)")
