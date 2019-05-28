@@ -19,4 +19,4 @@ main
 .idea/
 pkg/
 src/
-
+wifidata.db
