@@ -6,16 +6,13 @@ import (
 	"time"
 )
 
+
 // HTTP handler functions
 
 type ServerStatus struct {
 	WiFiScanUp bool
 	GPSScanUp bool
 	Timestamp time.Time
-}
-
-type scannedData struct {
-	Scanned string
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -40,15 +37,16 @@ func status(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Handle data page
+// In final version read data from database
 func data(w http.ResponseWriter, r *http.Request) {
-	scannedData := scannedData {
-		Scanned: "wlp4s0    Scan completed :\n	Cell 01 - Address: 88:AD:43:F9:6A:BC",
-	}
-	err := tmpl.ExecuteTemplate(w, "data.html", scannedData)
+
+	err := tmpl.ExecuteTemplate(w, "data.html", ScannedData)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
+	log.Print(ScannedData)
 }
 
 func NotFound(w http.ResponseWriter, r *http.Request) {
@@ -56,5 +54,15 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+}
+
+func Scanner(stop chan bool) {
+	stopscanner := false
+	for {
+		stopscanner = <- stop
+		if stopscanner == true {
+			break
+		}
 	}
 }

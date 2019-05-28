@@ -6,7 +6,10 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"time"
 )
+
+var ScannedData wifiData
 
 // errorString is a trivial implementation of error.
 type errorString struct {
@@ -29,13 +32,7 @@ func init() {
 }
 
 func main() {
-
-	// This needs to be configurable
-	// By arguments, config file or DB
-	WIFI, err := setWiFiInterface("config")
-	if err != nil {
-		log.Fatal("Can't read config file!")
-	}
+	stopScanner := make(chan bool)
 
 	r := mux.NewRouter()
 
@@ -45,9 +42,17 @@ func main() {
 	r.NotFoundHandler = http.HandlerFunc(NotFound)
 	http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
 
-	var data wifiData
+	// This needs to be configurable
+	// By arguments, config file or DB
+	WIFI, err := setWiFiInterface("config")
+	if err != nil {
+		log.Fatal("Can't read config file!")
+	}
 
-	WiFiParse(WIFI, &data)
+	go Scanner(stopScanner)
+	WiFiParse(WIFI, &ScannedData)
+	time.Sleep(5 * time.Second)
+	stopScanner <- true
 
 	http.ListenAndServe(":8080", nil)
 

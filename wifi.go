@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"log"
 	"os/exec"
-	"strconv"
 	"strings"
 )
 
@@ -31,9 +30,10 @@ func returnData(input string, mask string) string {
 	return tmp[1]
 }
 // pack packs data from input to struct
-func (w *wifiData) pack(input string) {
+func pack(input string) *wifiData{
 
-	lines := strings.Split(input, "\n")
+	var scannedData wifiData
+	/*lines := strings.Split(input, "\n")
 
 	for _, line := range lines {
 		// Don't capture scan output header nor Unknown fields
@@ -41,24 +41,32 @@ func (w *wifiData) pack(input string) {
 			continue
 		}
 		if strings.Contains(line, "Address: ") {
-			w.MAC = returnData(line, "Address: ")
+			scannedData.MAC = returnData(line, "Address: ")
 		}
 		if strings.Contains(line, "Channel:") {
-			w.Channel, _ = strconv.Atoi(returnData(line, "Channel:"))
+			scannedData.Channel, _ = strconv.Atoi(returnData(line, "Channel:"))
 		}
 		if strings.Contains(line, "Frequency:") {
-			w.Freq = returnData(line, "Frequency:")
+			scannedData.Freq = returnData(line, "Frequency:")
 		}
 		if strings.Contains(line, "Quality") {
 			continue // TBD - Quality=62/70  Signal level=-48 dBm
 		}
 		if strings.Contains(line, "Encryption") {
-			w.Enc = returnData(line, "Encryption key:")
+			scannedData.Enc = returnData(line, "Encryption key:")
 		}
 		if strings.Contains(line, "ESSID") {
-			w.ESSID = returnData(line, "ESSID:")
+			scannedData.ESSID = returnData(line, "ESSID:")
 		}
-	} // End of for
+	} // End of for*/
+
+	scannedData.MAC = "MAC"
+	scannedData.Channel = 11
+	scannedData.Freq = "32"
+	scannedData.Qual = "Quality=62/70  Signal level=-48 dBm"
+	scannedData.Enc = "WPA2"
+	scannedData.ESSID = "Testowy"
+	return &scannedData
 }
 
 // readList calls iwlist command and reads in scanned data
@@ -89,7 +97,7 @@ func WiFiParse(NIC string, w* wifiData)  {
 	readSlice := strings.Split(read, "Cell")
 
 	for _, singleRead := range readSlice {
-		w.pack(singleRead)
+		w = pack(singleRead)
 	} // End of for
 
 }
