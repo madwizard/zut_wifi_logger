@@ -1,6 +1,9 @@
 package main
 
-import "io/ioutil"
+import (
+	"io/ioutil"
+	"strings"
+)
 
 
 // setWiFiInterface reads config file and sets interface name
@@ -9,5 +12,5 @@ func setWiFiInterface(pathname string) (string, error) {
 	if err != nil	{
 		return "Error", err
 	}
-	return string(f), nil
+	return strings.TrimRight(string(f), "\n"), nil
 }

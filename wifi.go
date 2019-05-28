@@ -73,7 +73,7 @@ func readList(NIC string) (string, string) {
 
 	err := cmd.Run()
 	if err != nil {
-		log.Printf("cmd.Run() failed with error %s\n", err)
+		log.Printf("cmd.Run() failed with error %s and coundn't be run\n", err)
 	}
 
 	return string(stdout.String()), string(stderr.String())
@@ -83,7 +83,7 @@ func readList(NIC string) (string, string) {
 func WiFiParse(NIC string, w* wifiData)  {
 	read, err := readList(NIC)
 	if err != "" {
-		log.Printf("WiFiParse failed with error %s\n", err)
+		log.Printf("WiFiParse failed with error %s and couldn't be run\n", err)
 		return
 	}
 	readSlice := strings.Split(read, "Cell")
