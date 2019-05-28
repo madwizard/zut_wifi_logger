@@ -45,7 +45,7 @@ func main() {
 
 	go Scanner(stopScanner)
 
-	time.Sleep(5 * time.Second)
+	time.Sleep(30 * time.Second)
 	stopScanner <- true
 
 	http.ListenAndServe(":8080", nil)

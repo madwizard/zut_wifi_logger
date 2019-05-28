@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"log"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -33,7 +34,7 @@ func returnData(input string, mask string) string {
 func pack(input string) *wifiData{
 
 	var scannedData wifiData
-	/*lines := strings.Split(input, "\n")
+	lines := strings.Split(input, "\n")
 
 	for _, line := range lines {
 		// Don't capture scan output header nor Unknown fields
@@ -58,14 +59,7 @@ func pack(input string) *wifiData{
 		if strings.Contains(line, "ESSID") {
 			scannedData.ESSID = returnData(line, "ESSID:")
 		}
-	} // End of for*/
-
-	scannedData.MAC = "MAC"
-	scannedData.Channel = 11
-	scannedData.Freq = "32"
-	scannedData.Qual = "Quality=62/70  Signal level=-48 dBm"
-	scannedData.Enc = "WPA2"
-	scannedData.ESSID = "Testowy"
+	} // End of for
 	return &scannedData
 }
 

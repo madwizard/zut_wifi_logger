@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 func initDB() {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
@@ -13,6 +14,7 @@ func initDB() {
 func writeDB(data wifiData) {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
 	statement, _ := database.Prepare("INSERT INTO wifidata (essid, mac) VALUES (?,?)")
+	log.Println("Inserting %s and %s into database", data.ESSID, data.MAC)
 	statement.Exec(data.ESSID, data.MAC)
 }
 

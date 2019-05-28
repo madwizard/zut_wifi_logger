@@ -61,15 +61,17 @@ func Scanner(stop chan bool) {
 	stopscanner := false
 	log.Println("Scanner starting")
 	for {
-		stopscanner = <- stop
-		if stopscanner == true {
-			log.Println("Scanner stopping")
-			break
-		}
 		WIFI, err := setWiFiInterface("config")
 		if err != nil {
 			log.Fatal("Can't read config file!")
 		}
 		WiFiParse(WIFI, &ScannedData)
+		log.Println(ScannedData.MAC, ScannedData.ESSID)
+		writeDB(ScannedData)
+		stopscanner = <- stop
+		if stopscanner == true {
+			log.Println("Scanner stopping")
+			break
+		}
 	}
 }
