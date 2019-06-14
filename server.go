@@ -41,6 +41,7 @@ func status(w http.ResponseWriter, r *http.Request) {
 // In final version read data from database
 func data(w http.ResponseWriter, r *http.Request) {
 
+	ScannedData := readDB()
 	err := tmpl.ExecuteTemplate(w, "data.html", ScannedData)
 	if err != nil {
 		log.Println(err)

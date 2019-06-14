@@ -2,6 +2,8 @@
 
 <p>WiFi Mapper - Current data</p>
 {{template "nav-main"}}
-{{.MAC}}<br />
-
+{{range .}}
+    MAC: {{.MAC}}<br />
+    ESSID: {{.ESSID}}<br />
+{{end}}
 {{template "footer"}}
