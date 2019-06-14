@@ -45,15 +45,12 @@ func pack(input string) *wifiData{
 		}
 		if strings.Contains(line, "Address: ") {
 			scannedData.MAC = returnData(line, "Address: ")
-			log.Printf("pack: Address: %s", scannedData.MAC)
 		}
 		if strings.Contains(line, "Channel:") {
 			scannedData.Channel, _ = strconv.Atoi(returnData(line, "Channel:"))
-			log.Printf("pack: Channel: %d", scannedData.Channel)
 		}
 		if strings.Contains(line, "Frequency:") {
 			scannedData.Freq = returnData(line, "Frequency:")
-			log.Printf("pack: Frequency: %s", scannedData.Freq)
 		}
 		if strings.Contains(line, "Quality") {
 			continue // TBD - Quality=62/70  Signal level=-48 dBm
@@ -110,18 +107,27 @@ func WiFiParse(NIC string) []wifiData {
 func Scanner(stop chan bool) {
 	stopscanner := false
 	var ScannedData []wifiData
+
+	WIFI, err := setWiFiInterface("config")
+	if err != nil {
+		log.Fatal("Scanner: Can't read config file!")
+	}
+
 	log.Println("Scanner: starting")
+
 	for {
-		WIFI, err := setWiFiInterface("config")
-		if err != nil {
-			log.Fatal("Scanner: Can't read config file!")
-		}
+		log.Printf("Scanner: pass")
 		ScannedData = WiFiParse(WIFI)
 		writeDB(ScannedData)
-		stopscanner = <- stop
-		if stopscanner == true {
-			log.Println("Scanner: stopping")
-			break
+
+		select {
+			case stopscanner = <- stop:
+				if stopscanner == true {
+					log.Println("Scanner: stopping")
+					break
+				}
+				default:
+					continue
 		}
 	}
 }
