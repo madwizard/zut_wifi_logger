@@ -11,11 +11,13 @@ func initDB() {
 	statement.Exec()
 }
 
-func writeDB(data wifiData) {
+func writeDB(data *[]wifiData) {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
-	statement, _ := database.Prepare("INSERT INTO wifidata (essid, mac) VALUES (?,?)")
-	log.Println("Inserting %s and %s into database", data.ESSID, data.MAC)
-	statement.Exec(data.ESSID, data.MAC)
+	for item := range *data {
+		statement, _ := database.Prepare("INSERT INTO wifidata (essid, mac) VALUES (?,?)")
+		log.Printf("Inserting %s and %s into database", item.ESSID, item.MAC)
+		statement.Exec(item.ESSID, item.MAC)
+	}
 }
 
 func readDB() *[]wifiData {

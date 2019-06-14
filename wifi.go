@@ -23,6 +23,7 @@ type wifiData struct {
 	WPA string `json:"wpa"`				// WPA version
 }
 
+// returnData gets a line, splits it on mask and returns second token
 func returnData(input string, mask string) string {
 	var tmp []string
 	if strings.Contains(input, mask) {
@@ -30,6 +31,7 @@ func returnData(input string, mask string) string {
 	}
 	return tmp[1]
 }
+
 // pack packs data from input to struct
 func pack(input string) *wifiData{
 
@@ -43,12 +45,15 @@ func pack(input string) *wifiData{
 		}
 		if strings.Contains(line, "Address: ") {
 			scannedData.MAC = returnData(line, "Address: ")
+			log.Printf("pack: Address: %s", scannedData.MAC)
 		}
 		if strings.Contains(line, "Channel:") {
 			scannedData.Channel, _ = strconv.Atoi(returnData(line, "Channel:"))
+			log.Printf("pack: Channel: %d", scannedData.Channel)
 		}
 		if strings.Contains(line, "Frequency:") {
 			scannedData.Freq = returnData(line, "Frequency:")
+			log.Printf("pack: Frequency: %s", scannedData.Freq)
 		}
 		if strings.Contains(line, "Quality") {
 			continue // TBD - Quality=62/70  Signal level=-48 dBm
@@ -82,16 +87,41 @@ func readList(NIC string) (string, string) {
 }
 
 // parse parses scanned data and packs into slice of wifiData
-func WiFiParse(NIC string, w* wifiData)  {
+func WiFiParse(NIC string) []wifiData {
+	var ret []wifiData
 	read, err := readList(NIC)
 	if err != "" {
 		log.Printf("WiFiParse failed with error %s and couldn't be run\n", err)
-		return
+		return nil
 	}
 	readSlice := strings.Split(read, "Cell")
 
 	for _, singleRead := range readSlice {
+		var w *wifiData
 		w = pack(singleRead)
+		ret = append(ret, *w)
+		log.Printf("WiFiParse: Address: %s Channel: %d", w.MAC, w.Channel)
 	} // End of for
 
+	return ret
+}
+
+
+func Scanner(stop chan bool) {
+	stopscanner := false
+	var ScannedData []wifiData
+	log.Println("Scanner: starting")
+	for {
+		WIFI, err := setWiFiInterface("config")
+		if err != nil {
+			log.Fatal("Scanner: Can't read config file!")
+		}
+		ScannedData = WiFiParse(WIFI)
+		writeDB(ScannedData)
+		stopscanner = <- stop
+		if stopscanner == true {
+			log.Println("Scanner: stopping")
+			break
+		}
+	}
 }

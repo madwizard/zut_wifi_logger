@@ -4,8 +4,11 @@ import (
 	"github.com/goji/httpauth"
 	"github.com/gorilla/mux"
 	"html/template"
+	"log"
 	"net/http"
-	"time"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 var ScannedData wifiData
@@ -35,19 +38,27 @@ func init() {
 func main() {
 	stopScanner := make(chan bool)
 
-	r := mux.NewRouter()
-
-	r.HandleFunc("/", home)
-	r.HandleFunc("/status", status)
-	r.HandleFunc("/data", data)
-	r.NotFoundHandler = http.HandlerFunc(NotFound)
-	http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
+	// Gracefully close down
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	go Scanner(stopScanner)
 
-	time.Sleep(30 * time.Second)
+	go func() {
+		r := mux.NewRouter()
+
+		r.HandleFunc("/", home)
+		r.HandleFunc("/status", status)
+		r.HandleFunc("/data", data)
+		r.NotFoundHandler = http.HandlerFunc(NotFound)
+		http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
+
+		log.Print("Starting server www")
+
+		http.ListenAndServe(":8080", nil)
+	}()
+	sig := <- sigs
+	log.Printf("main: Got signal: %+v", sig)
 	stopScanner <- true
-
-	http.ListenAndServe(":8080", nil)
-
+	log.Printf("main: Shutting down")
 }

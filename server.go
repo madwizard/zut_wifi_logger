@@ -56,22 +56,3 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
 }
-
-func Scanner(stop chan bool) {
-	stopscanner := false
-	log.Println("Scanner starting")
-	for {
-		WIFI, err := setWiFiInterface("config")
-		if err != nil {
-			log.Fatal("Can't read config file!")
-		}
-		WiFiParse(WIFI, &ScannedData)
-		log.Println(ScannedData.MAC, ScannedData.ESSID)
-		writeDB(ScannedData)
-		stopscanner = <- stop
-		if stopscanner == true {
-			log.Println("Scanner stopping")
-			break
-		}
-	}
-}
