@@ -11,9 +11,9 @@ func initDB() {
 	statement.Exec()
 }
 
-func writeDB(data *[]wifiData) {
+func writeDB(data []wifiData) {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
-	for item := range *data {
+	for _, item := range data {
 		statement, _ := database.Prepare("INSERT INTO wifidata (essid, mac) VALUES (?,?)")
 		log.Printf("Inserting %s and %s into database", item.ESSID, item.MAC)
 		statement.Exec(item.ESSID, item.MAC)
