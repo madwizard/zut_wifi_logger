@@ -84,7 +84,7 @@ func readList(NIC string) (string, string) {
 }
 
 // parse parses scanned data and packs into slice of wifiData
-func WiFiParse(NIC string) []wifiData {
+func WiFiParse(NIC string) *[]wifiData {
 	var ret []wifiData
 	read, err := readList(NIC)
 	if err != "" {
@@ -97,16 +97,15 @@ func WiFiParse(NIC string) []wifiData {
 		var w *wifiData
 		w = pack(singleRead)
 		ret = append(ret, *w)
-		log.Printf("WiFiParse: Address: %s Channel: %d", w.MAC, w.Channel)
 	} // End of for
 
-	return ret
+	return &ret
 }
 
 
 func Scanner(stop chan bool) {
 	stopscanner := false
-	var ScannedData []wifiData
+
 
 	WIFI, err := setWiFiInterface("config")
 	if err != nil {
@@ -116,9 +115,12 @@ func Scanner(stop chan bool) {
 	log.Println("Scanner: starting")
 
 	for {
+
 		log.Printf("Scanner: pass")
+		var ScannedData *[]wifiData
 		ScannedData = WiFiParse(WIFI)
-		writeDB(ScannedData)
+
+		writeDB(*ScannedData)
 
 		select {
 			case stopscanner = <- stop:

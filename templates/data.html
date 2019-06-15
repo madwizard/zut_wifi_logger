@@ -2,8 +2,34 @@
 
 <p>WiFi Mapper - Current data</p>
 {{template "nav-main"}}
+    <table>
+        <tr>
+            <th>ESSID</th>
+            <th>MAC</th>
+            <th>Freq</th>
+            <th>SigLvl</th>
+            <th>Qual</th>
+            <th>Enc</th>
+            <th>Channel</th>
+            <th>Mode</th>
+            <th>IEEE</th>
+            <th>Bitrates</th>
+            <th>WPA</th>
+        </tr>
 {{range .}}
-    MAC: {{.MAC}}<br />
-    ESSID: {{.ESSID}}<br />
+    <tr>
+        <td>{{.ESSID}}</td>
+        <td>{{.MAC}}</td>
+        <td>{{.Freq}}</td>
+        <td>{{.SigLvl}}</td>
+        <td>{{.Qual}}</td>
+        <td>{{.Enc}}</td>
+        <td>{{.Channel}}</td>
+        <td>{{.Mode}}</td>
+        <td>{{.IEEE}}</td>
+        <td>{{.Bitrates}}</td>
+        <td>{{.WPA}}</td>
+    </tr>
 {{end}}
+    </table>
 {{template "footer"}}
