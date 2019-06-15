@@ -120,12 +120,12 @@ func Scanner(stop chan bool) {
 		var ScannedData *[]wifiData
 		ScannedData = WiFiParse(WIFI)
 
-		writeDB(*ScannedData)
+		writeWiFiDB(*ScannedData)
 
 		select {
 			case stopscanner = <- stop:
 				if stopscanner == true {
-					log.Println("Scanner: stopping")
+					log.Println("WiFi Scanner: stopping")
 					break
 				}
 				default:

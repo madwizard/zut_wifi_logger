@@ -6,6 +6,21 @@ import (
 	"time"
 )
 
+type webdata struct {
+	Timestamp string `json: "Timestamp"`
+	ESSID string `json:"ESSID"` 		// ESSID
+	MAC string	`json:"MAC"`			// Address
+	Freq string `json:"freq"`			// Frequency
+	SigLvl string `json:"siglvl"`		// SignalLevel
+	Qual string `json:"qual"`			// Quality
+	Enc string `json:"enc"`				// Encryption key
+	Channel int `json:"channel"`		// Channel
+	Mode string `json:"mode"`			// Mode
+	IEEE string `json:"IEEE"`			// IEEE
+	Bitrates string `json:"bitrates"`	// bitrates
+	WPA string `json:"wpa"`				// WPA version
+	GPS string `json: "GPS"`
+}
 
 // HTTP handler functions
 
@@ -47,7 +62,6 @@ func data(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
-	log.Print(ScannedData)
 }
 
 func NotFound(w http.ResponseWriter, r *http.Request) {

@@ -1,9 +1,8 @@
 package main
 
 import (
+	"go.bug.st/serial.v1"
 	"log"
-
-	serial "go.bug.st/serial.v1"
 )
 
 type gpsData struct {
@@ -11,7 +10,7 @@ type gpsData struct {
 	latitude string
 }
 
-func InitGPS(portDevice string) (serial.Port, []byte) {
+func InitGPS(portDevice string) (serial.Port) {
 
 	mode := &serial.Mode{
 		BaudRate: 115200,
@@ -31,7 +30,36 @@ func InitGPS(portDevice string) (serial.Port, []byte) {
 		log.Fatal(err)
 	}
 
-	buff := make([]byte, 400)
+	return port
+}
 
-	return port, buff
+func ReadGPS(port serial.Port) string {
+	buff := make([]byte, 200)
+	n, err := port.Read(buff)
+	if err != nil {
+		log.Printf("Couldn't read GPS coords")
+	}
+	return string(buff[:n])
+}
+
+func GpsScanner(stop chan bool) {
+	stopscanner := false
+
+	port := InitGPS("/dev/ttyUSB0")
+
+	for {
+		data := ReadGPS(port)
+		writeGpsDB(data)
+
+		select {
+		case stopscanner = <- stop:
+			if stopscanner == true {
+				log.Println("GPS Scanner: stopping")
+				port.Close()
+				break
+			}
+		default:
+			continue
+		}
+	}
 }
