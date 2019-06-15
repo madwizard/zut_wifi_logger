@@ -4,6 +4,7 @@
 {{template "nav-main"}}
     <table>
         <tr>
+            <th>Timestamp</th>
             <th>ESSID</th>
             <th>MAC</th>
             <th>Freq</th>
@@ -15,9 +16,11 @@
             <th>IEEE</th>
             <th>Bitrates</th>
             <th>WPA</th>
+            <th>GPS</th>
         </tr>
 {{range .}}
     <tr>
+        <td>{{.Timestamp}}</td>
         <td>{{.ESSID}}</td>
         <td>{{.MAC}}</td>
         <td>{{.Freq}}</td>
@@ -29,6 +32,7 @@
         <td>{{.IEEE}}</td>
         <td>{{.Bitrates}}</td>
         <td>{{.WPA}}</td>
+        <td>{{.GPS}}</td>
     </tr>
 {{end}}
     </table>

@@ -41,25 +41,3 @@ func ReadGPS(port serial.Port) string {
 	}
 	return string(buff[:n])
 }
-
-func GpsScanner(stop chan bool) {
-	stopscanner := false
-
-	port := InitGPS("/dev/ttyUSB0")
-
-	for {
-		data := ReadGPS(port)
-		writeGpsDB(data)
-
-		select {
-		case stopscanner = <- stop:
-			if stopscanner == true {
-				log.Println("GPS Scanner: stopping")
-				port.Close()
-				break
-			}
-		default:
-			continue
-		}
-	}
-}

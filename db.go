@@ -4,15 +4,16 @@ import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
+	"strconv"
 )
 
 // initDB creates DB if it doesn't exit
 func initDB() {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
 	wifidata, _ := database.Prepare("CREATE TABLE IF NOT EXISTS wifidata (id INTEGER PRIMARY KEY, essid TEXT, mac TEXT, freq TEXT, siglvl TEXT, " +
-		"qual TEXT, enc TEXT, channel INT, mode TEXT, ieee TEXT, bitrates TEXT, wpa text)")
+		"qual TEXT, enc TEXT, channel INT, mode TEXT, ieee TEXT, bitrates TEXT, wpa text, tmstmp TEXT)")
 	wifidata.Exec()
-	gpsdata, _ := database.Prepare("CREATE TABLE IF NOT EXISTS gpsdata (id INTEGER PRIMARY KEY, gpsdata TEXT)")
+	gpsdata, _ := database.Prepare("CREATE TABLE IF NOT EXISTS gpsdata (id INTEGER PRIMARY KEY, gpsdata TEXT DEFAULT '', tmstmp TEXT DEFAULT '')")
 	gpsdata.Exec()
 }
 
@@ -43,7 +44,7 @@ func checkIfIsInDB(ESSID string, MAC string) bool {
 
 // writeWiFiDB writes all data from scan to DB
 // Checks if ESSID + MAC pair already is in DB, then skips write.
-func writeWiFiDB(data []wifiData) {
+func writeWiFiDB(data []wifiData, timestamp int64) {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
 	defer database.Close()
 
@@ -54,37 +55,38 @@ func writeWiFiDB(data []wifiData) {
 			if exists {
 				continue
 			} else {
-				statement, _ := database.Prepare("INSERT INTO wifidata (essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa) " +
-					"VALUES (?,?,?,?,?,?,?,?,?,?,?)")
-				log.Printf("writeDB: Inserting %s and %s into database", item.ESSID, item.MAC)
+				statement, _ := database.Prepare("INSERT INTO wifidata (essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa, tmstmp) " +
+					"VALUES (?,?,?,?,?,?,?,?,?,?,?, ?)")
+				tm := strconv.FormatInt(timestamp, 10)
 				statement.Exec(item.ESSID, item.MAC, item.Freq, item.SigLvl, item.Qual, item.Enc,
-					item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA)
+					item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA, tm)
 			}
 		}
 	}
 }
 
 // writeGpsDB writes full GPS scan to DB
-func writeGpsDB(data string) {
+func writeGpsDB(data string, timestamp int64) {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
 	defer database.Close()
-
-	statement, _ := database.Prepare("INSERT INTO gpsdata(gpsdata) VALUES(?)")
-	statement.Exec(data)
+	tm := strconv.FormatInt(timestamp, 10)
+	statement, _ := database.Prepare("INSERT INTO gpsdata (gpsdata,  tmstmp) VALUES(?, ?)")
+	statement.Exec(data, tm)
 }
 
 func readDB() *[]webdata {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
 	defer database.Close()
-	log.Print("Reading from database")
-	rows, _ := database.Query("SELECT tmstmp, essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa from wifidata")
+	rows, _ := database.Query("SELECT tmstmp, essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa, " +
+		" ( SELECT gpsdata from gpsdata WHERE wifidata.tmstmp = gpsdata.tmstmp ) FROM wifidata")
 	var item webdata
 	var retdata []webdata
 	{
 	}
 	for rows.Next() {
 		rows.Scan(&item.Timestamp, &item.ESSID, &item.MAC, &item.Freq, &item.SigLvl, &item.Qual, &item.Enc,
-			&item.Channel, &item.Mode, &item.IEEE, &item.Bitrates, &item.WPA)
+			&item.Channel, &item.Mode, &item.IEEE, &item.Bitrates, &item.WPA, &item.GPS)
+
 		retdata = append(retdata, item)
 	}
 

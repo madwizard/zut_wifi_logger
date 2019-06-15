@@ -37,14 +37,12 @@ func init() {
 
 func main() {
 	stopScanner := make(chan bool)
-	stopGpsScanner := make(chan bool)
 
 	// Gracefully close down
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	go Scanner(stopScanner)
-	go GpsScanner(stopGpsScanner)
 
 	go func() {
 		r := mux.NewRouter()
@@ -62,6 +60,5 @@ func main() {
 	sig := <- sigs
 	log.Printf("main: Got signal: %+v", sig)
 	stopScanner <- true
-	stopGpsScanner <- true
 	log.Printf("main: Shutting down")
 }
