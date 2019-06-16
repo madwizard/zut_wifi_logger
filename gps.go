@@ -3,6 +3,7 @@ package main
 import (
 	"go.bug.st/serial.v1"
 	"log"
+	"strconv"
 	"time"
 )
 
@@ -43,6 +44,14 @@ func ReadGPS(port serial.Port) string {
 	return string(buff[:n])
 }
 
+func writeGpsData(data string) {
+	now := time.Now()
+	timestamp := now.Unix()
+
+	GpsData.Timestamp = strconv.FormatInt(timestamp, 10)
+	GpsData.Data = data
+}
+
 func gpsScanner(stop chan bool) {
 	stopscanner := false
 
@@ -55,10 +64,7 @@ func gpsScanner(stop chan bool) {
 		log.Printf("Scanner: pass")
 		data := ReadGPS(port)
 
-		now := time.Now()
-		timestamp := now.Unix()
-		writeGpsDB(data, timestamp)
-
+		writeGpsData(data)
 
 		select {
 		case stopscanner = <- stop:

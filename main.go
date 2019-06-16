@@ -22,6 +22,9 @@ func main() {
 	stopScanner := make(chan bool)
 	stopGpsScanner := make(chan bool)
 
+	GpsData.Data = "ABCDEADCOW"
+	GpsData.Timestamp = "ABCNEVER"
+
 	// Gracefully close down
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
