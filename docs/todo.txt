@@ -1,0 +1,4 @@
+1. Dane z GPS w osobnym wątku do globalnej zmiennej.
+2. Zapisywanie dokładności i margines czasowy korelacji gps i wifi.
+3. Nice to have: filtrowanie danych o słabej dokładności do korelacji gps i wifi
+4. Wizualizacja danych (mockup mapy).
