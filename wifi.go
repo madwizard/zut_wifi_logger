@@ -117,8 +117,6 @@ func Scanner(stop chan bool) {
 	log.Println("Scanner: starting")
 
 	for {
-
-		log.Printf("Scanner: pass")
 		var ScannedData *[]wifiData
 		ScannedData = WiFiParse(WIFI)
 

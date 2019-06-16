@@ -44,13 +44,12 @@ func checkIfIsInDB(ESSID string, MAC string) bool {
 
 // writeWiFiDB writes all data from scan to DB
 // Checks if ESSID + MAC pair already is in DB, then skips write.
-func writeWiFiDB(data []wifiData, timestamp int64, position string) {
+func writeWiFiDB(data []wifiData, timestamp int64) {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
 	defer database.Close()
 
 	for _, item := range data {
 		if item.MAC != "" {
-			log.Printf("ESSID %s, MAC %s", item.ESSID, item.MAC)
 			exists := checkIfIsInDB(item.ESSID, item.MAC)
 			if exists {
 				continue
@@ -59,7 +58,7 @@ func writeWiFiDB(data []wifiData, timestamp int64, position string) {
 					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)")
 				tm := strconv.FormatInt(timestamp, 10)
 				statement.Exec(item.ESSID, item.MAC, item.Freq, item.SigLvl, item.Qual, item.Enc,
-					item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA, tm, position)
+					item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA, tm, GpsData.Data)
 			}
 		}
 	}

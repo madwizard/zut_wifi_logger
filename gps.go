@@ -5,6 +5,7 @@ import (
 	"log"
 	"strconv"
 	"time"
+	"strings"
 )
 
 type gpsData struct {
@@ -44,12 +45,33 @@ func ReadGPS(port serial.Port) string {
 	return string(buff[:n])
 }
 
-func writeGpsData(data string) {
+func writeGpsData(input string) {
 	now := time.Now()
 	timestamp := now.Unix()
 
-	GpsData.Timestamp = strconv.FormatInt(timestamp, 10)
-	GpsData.Data = data
+	var tmp []string
+
+	lines := strings.Split(input, "\n")
+
+	// Example line we're lookig for:
+	// $GNRMC,211622.000,A,5327.819159,N,01432.634518,E,0.00,152.07,310319,,,A*7B
+	// Interesing part is: 5327.819159,N,01432.634518,E
+	for _, line := range lines {
+		if strings.Contains(line, "GNRMC") {
+			if len(line) >= 49 {
+				GpsData.Timestamp = strconv.FormatInt(timestamp, 10)
+				tokens := strings.Split(line, ",")
+				for i := 3; i <= 6; i++ {
+					tmp = append(tmp, tokens[i])
+				}
+				ret := strings.Join(tmp, ",")
+				GpsData.Data = ret
+				log.Printf("Output: %s", GpsData.Data)
+			}
+		} else {
+			continue
+		}
+	}
 }
 
 func gpsScanner(stop chan bool) {
@@ -60,8 +82,6 @@ func gpsScanner(stop chan bool) {
 	log.Println("Scanner: starting")
 
 	for {
-
-		log.Printf("Scanner: pass")
 		data := ReadGPS(port)
 
 		writeGpsData(data)
