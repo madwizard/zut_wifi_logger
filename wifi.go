@@ -113,7 +113,6 @@ func Scanner(stop chan bool) {
 		log.Fatal("Scanner: Can't read config file!")
 	}
 
-	port := InitGPS("/dev/ttyUSB0")
 
 	log.Println("Scanner: starting")
 
@@ -122,19 +121,16 @@ func Scanner(stop chan bool) {
 		log.Printf("Scanner: pass")
 		var ScannedData *[]wifiData
 		ScannedData = WiFiParse(WIFI)
-		data := ReadGPS(port)
 
 		now := time.Now()
 		timestamp := now.Unix()
 		writeWiFiDB(*ScannedData, timestamp)
-		writeGpsDB(data, timestamp)
 
 
 		select {
 			case stopscanner = <- stop:
 				if stopscanner == true {
 					log.Println("Scanner: stopping")
-					port.Close()
 					break
 				}
 				default:

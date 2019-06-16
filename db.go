@@ -11,7 +11,7 @@ import (
 func initDB() {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
 	wifidata, _ := database.Prepare("CREATE TABLE IF NOT EXISTS wifidata (id INTEGER PRIMARY KEY, essid TEXT, mac TEXT, freq TEXT, siglvl TEXT, " +
-		"qual TEXT, enc TEXT, channel INT, mode TEXT, ieee TEXT, bitrates TEXT, wpa text, tmstmp TEXT)")
+		"qual TEXT, enc TEXT, channel INT, mode TEXT, ieee TEXT, bitrates TEXT, wpa text, tmstmp TEXT, position TEXT)")
 	wifidata.Exec()
 	gpsdata, _ := database.Prepare("CREATE TABLE IF NOT EXISTS gpsdata (id INTEGER PRIMARY KEY, gpsdata TEXT DEFAULT '', tmstmp TEXT DEFAULT '')")
 	gpsdata.Exec()
@@ -44,7 +44,7 @@ func checkIfIsInDB(ESSID string, MAC string) bool {
 
 // writeWiFiDB writes all data from scan to DB
 // Checks if ESSID + MAC pair already is in DB, then skips write.
-func writeWiFiDB(data []wifiData, timestamp int64) {
+func writeWiFiDB(data []wifiData, timestamp int64, position string) {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
 	defer database.Close()
 
@@ -55,30 +55,21 @@ func writeWiFiDB(data []wifiData, timestamp int64) {
 			if exists {
 				continue
 			} else {
-				statement, _ := database.Prepare("INSERT INTO wifidata (essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa, tmstmp) " +
-					"VALUES (?,?,?,?,?,?,?,?,?,?,?, ?)")
+				statement, _ := database.Prepare("INSERT INTO wifidata (essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa, tmstmp, position) " +
+					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)")
 				tm := strconv.FormatInt(timestamp, 10)
 				statement.Exec(item.ESSID, item.MAC, item.Freq, item.SigLvl, item.Qual, item.Enc,
-					item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA, tm)
+					item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA, tm, position)
 			}
 		}
 	}
-}
-
-// writeGpsDB writes full GPS scan to DB
-func writeGpsDB(data string, timestamp int64) {
-	database, _ := sql.Open("sqlite3", "./wifidata.db")
-	defer database.Close()
-	tm := strconv.FormatInt(timestamp, 10)
-	statement, _ := database.Prepare("INSERT INTO gpsdata (gpsdata,  tmstmp) VALUES(?, ?)")
-	statement.Exec(data, tm)
 }
 
 func readDB() *[]webdata {
 	database, _ := sql.Open("sqlite3", "./wifidata.db")
 	defer database.Close()
 	rows, _ := database.Query("SELECT tmstmp, essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa, " +
-		" ( SELECT gpsdata from gpsdata WHERE wifidata.tmstmp = gpsdata.tmstmp ) FROM wifidata")
+		" position wifidata")
 	var item webdata
 	var retdata []webdata
 	{

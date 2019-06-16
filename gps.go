@@ -3,11 +3,12 @@ package main
 import (
 	"go.bug.st/serial.v1"
 	"log"
+	"time"
 )
 
 type gpsData struct {
-	longitude string
-	latitude string
+	Data string
+	Timestamp string
 }
 
 func InitGPS(portDevice string) (serial.Port) {
@@ -40,4 +41,34 @@ func ReadGPS(port serial.Port) string {
 		log.Printf("Couldn't read GPS coords")
 	}
 	return string(buff[:n])
+}
+
+func gpsScanner(stop chan bool) {
+	stopscanner := false
+
+	port := InitGPS("/dev/ttyUSB0")
+
+	log.Println("Scanner: starting")
+
+	for {
+
+		log.Printf("Scanner: pass")
+		data := ReadGPS(port)
+
+		now := time.Now()
+		timestamp := now.Unix()
+		writeGpsDB(data, timestamp)
+
+
+		select {
+		case stopscanner = <- stop:
+			if stopscanner == true {
+				log.Println("GPS Scanner: stopping")
+				port.Close()
+				break
+			}
+		default:
+			continue
+		}
+	}
 }

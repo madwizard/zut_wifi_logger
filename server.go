@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/goji/httpauth"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"time"
@@ -70,4 +72,18 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
+}
+
+func wwwServer() {
+	r := mux.NewRouter()
+
+	r.HandleFunc("/", home)
+	r.HandleFunc("/status", status)
+	r.HandleFunc("/data", data)
+	r.NotFoundHandler = http.HandlerFunc(NotFound)
+	http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
+
+	log.Print("Starting server www")
+
+	http.ListenAndServe(":8080", nil)
 }
