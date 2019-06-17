@@ -9,7 +9,7 @@ import (
 )
 
 type webdata struct {
-	Timestamp string `json: "Timestamp"`
+	Timestamp string `json:"Timestamp"`
 	ESSID string `json:"ESSID"` 		// ESSID
 	MAC string	`json:"MAC"`			// Address
 	Freq string `json:"freq"`			// Frequency
@@ -21,7 +21,7 @@ type webdata struct {
 	IEEE string `json:"IEEE"`			// IEEE
 	Bitrates string `json:"bitrates"`	// bitrates
 	WPA string `json:"wpa"`				// WPA version
-	GPS string `json: "GPS"`
+	GPS string `json:"GPS"`
 }
 
 // HTTP handler functions
