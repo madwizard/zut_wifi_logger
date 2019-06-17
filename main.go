@@ -8,6 +8,7 @@ import (
 	"syscall"
 )
 
+var GPSdata GpsData
 var tmpl *template.Template
 
 func init() {
@@ -19,6 +20,10 @@ func init() {
 func main() {
 	stopScanner := make(chan bool)
 	stopGpsScanner := make(chan bool)
+
+	GPSdata.Timestamp = "00000000"
+	GPSdata.Latitude = "00000000"
+	GPSdata.Longitute = "00000000"
 
 	// Gracefully close down
 	sigs := make(chan os.Signal, 1)
