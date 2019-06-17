@@ -88,7 +88,7 @@ func gpsScanner(stop chan bool) {
 
 		select {
 		case stopscanner = <- stop:
-			if stopscanner == true {
+			if stopscanner {
 				log.Println("GPS Scanner: stopping")
 				port.Close()
 				break

@@ -127,7 +127,7 @@ func Scanner(stop chan bool) {
 
 		select {
 			case stopscanner = <- stop:
-				if stopscanner == true {
+				if stopscanner {
 					log.Println("Scanner: stopping")
 					break
 				}
