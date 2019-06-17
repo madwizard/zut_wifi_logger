@@ -34,6 +34,11 @@
             .openOn(mymap);
     }
 
+    var popup = L.popup()
+        .setLatLng([53.4324, 14.3263])
+        .setContent("WiFi Scanned at 53.4324 N, 14.5535 E")
+        .openOn(mymap);
+
     mymap.on('click', onMapClick);
 
 </script>

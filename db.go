@@ -58,7 +58,7 @@ func writeWiFiDB(data []wifiData, timestamp int64) {
 					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)")
 				tm := strconv.FormatInt(timestamp, 10)
 				statement.Exec(item.ESSID, item.MAC, item.Freq, item.SigLvl, item.Qual, item.Enc,
-					item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA, tm, GpsData.Data)
+					item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA, tm, "")
 			}
 		}
 	}
