@@ -66,6 +66,17 @@ func data(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func rendermap(w http.ResponseWriter, r *http.Request) {
+
+	//ScannedData := readDB()
+	err := tmpl.ExecuteTemplate(w, "map.html", nil)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+}
+
+
 func NotFound(w http.ResponseWriter, r *http.Request) {
 	err := tmpl.ExecuteTemplate(w, "404.html", nil)
 	if err != nil {
@@ -80,6 +91,7 @@ func wwwServer() {
 	r.HandleFunc("/", home)
 	r.HandleFunc("/status", status)
 	r.HandleFunc("/data", data)
+	r.HandleFunc("/map", rendermap)
 	r.NotFoundHandler = http.HandlerFunc(NotFound)
 	http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
 
