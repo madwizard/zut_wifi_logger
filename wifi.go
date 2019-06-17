@@ -95,8 +95,7 @@ func WiFiParse(NIC string) *[]wifiData {
 	readSlice := strings.Split(read, "Cell")
 
 	for _, singleRead := range readSlice {
-		var w *wifiData
-		w = pack(singleRead)
+		w := pack(singleRead)
 		ret = append(ret, *w)
 	} // End of for
 
