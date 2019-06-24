@@ -9,12 +9,16 @@ import (
 
 // initDB creates DB if it doesn't exit
 func initDB() {
-	database, _ := sql.Open("sqlite3", "./wifidata.db")
-	wifidata, _ := database.Prepare("CREATE TABLE IF NOT EXISTS wifidata (id INTEGER PRIMARY KEY, essid TEXT, mac TEXT, freq TEXT, siglvl TEXT, " +
-		"qual TEXT, enc TEXT, channel INT, mode TEXT, ieee TEXT, bitrates TEXT, wpa text, tmstmp TEXT, position TEXT)")
+	database, err := sql.Open("sqlite3", "./wifidata.db")
+	if err != nil {
+		log.Printf("Error initilizing Database: %v", err)
+	}
+	wifidata, err := database.Prepare("CREATE TABLE IF NOT EXISTS wifidata (id INTEGER PRIMARY KEY, essid TEXT, mac TEXT, freq TEXT, siglvl TEXT, " +
+		"qual TEXT, enc TEXT, channel INT, mode TEXT, ieee TEXT, bitrates TEXT, wpa TEXT, tmstmp TEXT, latitude TEXT, longitude TEXT)")
+	if err != nil {
+		log.Printf("Error creating table: %v", err)
+	}
 	wifidata.Exec()
-	gpsdata, _ := database.Prepare("CREATE TABLE IF NOT EXISTS gpsdata (id INTEGER PRIMARY KEY, gpsdata TEXT DEFAULT '', tmstmp TEXT DEFAULT '')")
-	gpsdata.Exec()
 }
 
 // chekcIfIsInDB must check if the ESSID and MAC pair exists in DB, will discard it for now
@@ -24,7 +28,10 @@ func checkIfIsInDB(ESSID string, MAC string) bool {
 	var essid string
 	var mac string
 
-	rows, _ := database.Query("SELECT essid, mac FROM wifidata WHERE essid = ? AND mac = ?", ESSID, MAC)
+	rows, err := database.Query("SELECT essid, mac FROM wifidata WHERE essid = ? AND mac = ?", ESSID, MAC)
+	if err != nil {
+		log.Printf("Error reading database: %v", err)
+	}
 
 	defer rows.Close()
 
@@ -45,7 +52,10 @@ func checkIfIsInDB(ESSID string, MAC string) bool {
 // writeWiFiDB writes all data from scan to DB
 // Checks if ESSID + MAC pair already is in DB, then skips write.
 func writeWiFiDB(data []wifiData, timestamp int64) {
-	database, _ := sql.Open("sqlite3", "./wifidata.db")
+	database, err := sql.Open("sqlite3", "./wifidata.db")
+	if err != nil {
+		log.Printf("Can't open database: %v", err)
+	}
 	defer database.Close()
 
 	for _, item := range data {
@@ -54,28 +64,31 @@ func writeWiFiDB(data []wifiData, timestamp int64) {
 			if exists {
 				continue
 			} else {
-				statement, _ := database.Prepare("INSERT INTO wifidata (essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa, tmstmp, position) " +
-					"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)")
+				statement, _ := database.Prepare("INSERT INTO wifidata (essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa, tmstmp, latitude, longitude) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 				tm := strconv.FormatInt(timestamp, 10)
-				statement.Exec(item.ESSID, item.MAC, item.Freq, item.SigLvl, item.Qual, item.Enc,
-					item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA, tm, "")
+				//log.Printf("Latitude %s Longitude %s", GPSdata.Latitude, GPSdata.Longitute)
+				statement.Exec(item.ESSID, item.MAC, item.Freq, item.SigLvl, item.Qual, item.Enc, item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA, tm, GPSdata.Latitude, GPSdata.Longitute)
 			}
 		}
 	}
 }
 
 func readDB() *[]webdata {
-	database, _ := sql.Open("sqlite3", "./wifidata.db")
+	database, err := sql.Open("sqlite3", "./wifidata.db")
+	if err != nil {
+		log.Printf("Can't open database: %v", err)
+	}
 	defer database.Close()
 	rows, _ := database.Query("SELECT tmstmp, essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa, " +
-		" position wifidata")
+		" latitude, longitude FROM wifidata")
 	var item webdata
 	var retdata []webdata
 	{
 	}
 	for rows.Next() {
 		rows.Scan(&item.Timestamp, &item.ESSID, &item.MAC, &item.Freq, &item.SigLvl, &item.Qual, &item.Enc,
-			&item.Channel, &item.Mode, &item.IEEE, &item.Bitrates, &item.WPA, &item.GPS)
+			&item.Channel, &item.Mode, &item.IEEE, &item.Bitrates, &item.WPA, &item.Latitude, &item.Longitude)
 
 		retdata = append(retdata, item)
 	}

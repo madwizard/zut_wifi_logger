@@ -11,8 +11,8 @@ import (
 
 type GpsData struct {
 	Timestamp string
-	Longitute string
 	Latitude string
+	Longitute string
 }
 
 func InitGPS(portDevice string) (serial.Port) {
@@ -53,6 +53,7 @@ func writeGpsData(input string) {
 	for _, line := range lines {
 		if strings.Contains(line, "GNRMC") {
 			if len(line) >= 74 {
+				line = strings.TrimSuffix(line, "\n")
 				s, err := nmea.Parse(line)
 				if err != nil {
 					log.Printf("Couldn't parse GPS data: %v", err)

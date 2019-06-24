@@ -13,11 +13,10 @@
 </head>
 <link rel="stylesheet" href="/pub/css/main.css">
 <body>
-
+{{template "nav-main"}}
 <div id="mapid" style="width: 1024px; height: 780px;"></div>
 <script>
-
-    var mymap = L.map('mapid').setView([53.4324, 14.5535], 13);
+    var mymap = L.map('mapid').setView([{{.Latitude}},{{.Longitude}}], 8);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         maxZoom: 18,
@@ -27,20 +26,12 @@
         id: 'mapbox.streets'
     }).addTo(mymap);
 
-    function onMapClick(e) {
-        popup
-            .setLatLng(e.latlng)
-            .setContent("You clicked the map at " + e.latlng.toString())
-            .openOn(mymap);
-    }
-
+    {{range .}}
     var popup = L.popup()
-        .setLatLng([53.4324, 14.3263])
-        .setContent("WiFi Scanned at 53.4324 N, 14.5535 E")
+        .setLatLng([{{.Latitude}}, {{.Longitude}}])
+        .setContent("WiFi {{.ESSID}} scanned at {{.Latitude}}, {{.Longitude}}")
         .openOn(mymap);
-
-    mymap.on('click', onMapClick);
-
+    {{end}}
 </script>
 
 

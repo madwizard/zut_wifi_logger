@@ -21,7 +21,8 @@ type webdata struct {
 	IEEE string `json:"IEEE"`			// IEEE
 	Bitrates string `json:"bitrates"`	// bitrates
 	WPA string `json:"wpa"`				// WPA version
-	GPS string `json:"GPS"`
+	Latitude string `json:"Latitude"`
+	Longitude string `json:"Longitude"`
 }
 
 // HTTP handler functions
@@ -68,8 +69,8 @@ func data(w http.ResponseWriter, r *http.Request) {
 
 func rendermap(w http.ResponseWriter, r *http.Request) {
 
-	//ScannedData := readDB()
-	err := tmpl.ExecuteTemplate(w, "map.html", nil)
+	ScannedData := readDB()
+	err := tmpl.ExecuteTemplate(w, "map.html", ScannedData)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
