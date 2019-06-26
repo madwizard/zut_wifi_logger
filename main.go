@@ -6,13 +6,17 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"go.bug.st/serial.v1"
 )
 
 var GPSdata GpsData
 var tmpl *template.Template
+var port serial.Port
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("templates/*.html"))
+
+	port = InitGPS("/dev/ttyUSB0")
 
 	initDB()
 }
@@ -31,7 +35,6 @@ func main() {
 
 	go gpsScanner(stopGpsScanner)
 	go Scanner(stopScanner)
-
 	go wwwServer()
 
 	sig := <- sigs

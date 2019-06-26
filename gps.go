@@ -76,8 +76,6 @@ func writeGpsData(input string) {
 func gpsScanner(stop chan bool) {
 	stopscanner := false
 
-	port := InitGPS("/dev/ttyUSB0")
-
 	log.Println("Scanner: starting")
 
 	for {
