@@ -12,6 +12,7 @@ import (
 var GPSdata GpsData
 var tmpl *template.Template
 var port serial.Port
+var config Config
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("templates/*.html"))
