@@ -107,7 +107,7 @@ func Scanner(stop chan bool) {
 	stopscanner := false
 
 
-	WIFI, err := setWiFiInterface("config")
+	WIFI, err := setWiFiInterface("config.yml")
 	if err != nil {
 		log.Fatal("Scanner: Can't read config file!")
 	}
