@@ -1,12 +1,12 @@
 {{define "nav-main"}}
 
 <nav>
-    <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/status">Server status</a></li>
-        <li><a href="/data">Current scan data</a></li>
-        <li><a href="/map">See ESSIDs on a map</a></li>
-        <li><a href="/download">Download scanned data</a></li>
-    </ul>
+        <table>
+        <tr>
+            <th><a href="/"><input type="button" value="Home"></a></th>
+            <th><a href="/data"><input type="button" value="Data"></a></th>
+            <th><a href="/map"><input type="button" value="Map"></a></th>
+        </tr>
+        </table>
 </nav>
 {{end}}
