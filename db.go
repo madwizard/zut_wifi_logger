@@ -23,36 +23,7 @@ func initDB() {
 	wifidata.Exec()
 }
 
-// chekcIfIsInDB must check if the ESSID and MAC pair exists in DB, will discard it for now
-func checkIfIsInDB(ESSID string, MAC string) bool {
-	database, _ := sql.Open("sqlite3", "./wifidata.db")
-	defer database.Close()
-	var essid string
-	var mac string
-
-	rows, err := database.Query("SELECT essid, mac FROM wifidata WHERE essid LIKE '%" + ESSID + "' AND mac LIKE '%" + MAC + "'")
-	if err != nil {
-		log.Printf("Error reading database: %v", err)
-	}
-
-	defer rows.Close()
-
-	for rows.Next() {
-		err := rows.Scan(&essid, &mac)
-		if err != nil {
-			if err != sql.ErrNoRows {
-				log.Printf("checkIfIsInDB: Couldn't scan rows")
-			} else {
-				return true
-			}
-		}
-
-	}
-	return false
-}
-
 // writeWiFiDB writes all data from scan to DB
-// Checks if ESSID + MAC pair already is in DB, then skips write.
 func writeWiFiDB(data []wifiData, timestamp int64) {
 	database, err := sql.Open("sqlite3", "./wifidata.db")
 	if err != nil {
@@ -62,16 +33,11 @@ func writeWiFiDB(data []wifiData, timestamp int64) {
 
 	for _, item := range data {
 		if item.MAC != "" {
-			exists := checkIfIsInDB(item.ESSID, item.MAC)
-			if exists {
-				continue
-			} else {
 				statement, _ := database.Prepare("INSERT OR IGNORE INTO wifidata (essid, mac, freq, siglvl, qual, enc, channel, mode, ieee, bitrates, wpa, tmstmp, latitude, longitude) " +
 					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 				tm := strconv.FormatInt(timestamp, 10)
 				//log.Printf("Latitude %s Longitude %s", GPSdata.Latitude, GPSdata.Longitute)
 				statement.Exec(stripSpaces(item.ESSID), stripSpaces(item.MAC), item.Freq, item.SigLvl, item.Qual, item.Enc, item.Channel, item.Mode, item.IEEE, item.Bitrates, item.WPA, tm, GPSdata.Latitude, GPSdata.Longitute)
-			}
 		}
 	}
 }
