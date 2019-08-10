@@ -48,16 +48,16 @@ func pack(input string) *wifiData{
 			scannedData.MAC = strings.Replace(returnData(line, "Address: "), string('"'), "", -1)
 		}
 		if strings.Contains(line, "Channel:") {
-			scannedData.Channel, _ = strconv.Atoi(returnData(line, "Channel:"))
+			scannedData.Channel, _ = strconv.Atoi(strings.Replace(returnData(line, "Channel:"), string('"'), "", -1))
 		}
 		if strings.Contains(line, "Frequency:") {
-			scannedData.Freq = returnData(line, "Frequency:")
+			scannedData.Freq = strings.Replace(returnData(line, "Frequency:"), string('"'), "", -1)
 		}
 		if strings.Contains(line, "Quality") {
 			continue // TBD - Quality=62/70  Signal level=-48 dBm
 		}
 		if strings.Contains(line, "Encryption") {
-			scannedData.Enc = returnData(line, "Encryption key:")
+			scannedData.Enc = strings.Replace(returnData(line, "Encryption key:"), string('"'), "", -1)
 		}
 		if strings.Contains(line, "ESSID") {
 			scannedData.ESSID = strings.Replace(returnData(line, "ESSID:"), string('"'), "", -1)
