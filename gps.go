@@ -9,12 +9,6 @@ import (
 	"time"
 )
 
-type GpsData struct {
-	Timestamp string
-	Latitude string
-	Longitute string
-}
-
 func InitGPS(portDevice string) (serial.Port) {
 
 	mode := &serial.Mode{

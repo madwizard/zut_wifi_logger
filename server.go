@@ -1,6 +1,7 @@
 package main
 
 import (
+	"html/template"
 	"github.com/goji/httpauth"
 	"github.com/gorilla/mux"
 	"log"
@@ -8,24 +9,16 @@ import (
 	"time"
 )
 
-type webdata struct {
-	Timestamp string `json:"Timestamp"`
-	ESSID string `json:"ESSID"` 		// ESSID
-	MAC string	`json:"MAC"`			// Address
-	Freq string `json:"freq"`			// Frequency
-	SigLvl string `json:"siglvl"`		// SignalLevel
-	Qual string `json:"qual"`			// Quality
-	Enc string `json:"enc"`				// Encryption key
-	Channel int `json:"channel"`		// Channel
-	Mode string `json:"mode"`			// Mode
-	IEEE string `json:"IEEE"`			// IEEE
-	Bitrates string `json:"bitrates"`	// bitrates
-	WPA string `json:"wpa"`				// WPA version
-	Latitude string `json:"Latitude"`
-	Longitude string `json:"Longitude"`
+var tmpl *template.Template
+
+func init(){
+
+	tmpl = template.Must(template.ParseGlob("templates/*.html"))
 }
 
-// HTTP handler functions
+func main() {
+	go wwwServer()
+}
 
 type ServerStatus struct {
 	WiFiScanUp bool

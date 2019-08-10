@@ -9,20 +9,6 @@ import (
 	"time"
 )
 
-// Example scanned data is in docs/example_WiFiScanData
-type wifiData struct {
-	ESSID string `json:"ESSID"` 		// ESSID
-	MAC string	`json:"MAC"`			// Address
-	Freq string `json:"freq"`			// Frequency
-	SigLvl string `json:"siglvl"`		// SignalLevel
-	Qual string `json:"qual"`			// Quality
-	Enc string `json:"enc"`				// Encryption key
-	Channel int `json:"channel"`		// Channel
-	Mode string `json:"mode"`			// Mode
-	IEEE string `json:"IEEE"`			// IEEE
-	Bitrates string `json:"bitrates"`	// bitrates
-	WPA string `json:"wpa"`				// WPA version
-}
 
 // returnData gets a line, splits it on mask and returns second token
 func returnData(input string, mask string) string {
