@@ -24,7 +24,7 @@ func InitGPS(portDevice string) (serial.Port) {
 		StopBits: serial.OneStopBit,
 	}
 
-	port, err := serial.Open(portDevice, mode)
+	port, err := serial.Open("/dev/" + portDevice, mode)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,6 +65,7 @@ func writeGpsData(input string) {
 					GPSdata.Timestamp = strconv.FormatInt(now.Unix(), 10)
 					GPSdata.Latitude = nmea.FormatGPS(m.Latitude)
 					GPSdata.Longitute = nmea.FormatGPS(m.Longitude)
+					log.Println("Longitude  " + GPSdata.Longitute + "Latitude " + GPSdata.Latitude)
 				}
 			}
 		} else {

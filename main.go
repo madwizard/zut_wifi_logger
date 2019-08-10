@@ -12,11 +12,19 @@ import (
 var GPSdata GpsData
 var tmpl *template.Template
 var port serial.Port
+var usb string
+var WiFi string
 
 func init() {
 	tmpl = template.Must(template.ParseGlob("templates/*.html"))
 
-	port = InitGPS("/dev/ttyUSB0")
+	err := readConfig("./config.yml")
+	if err != nil {
+		log.Printf("Couldn't read config file: %v", err)
+		os.Exit(-1)
+	}
+
+	port = InitGPS(usb)
 
 	initDB()
 }

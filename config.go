@@ -6,31 +6,26 @@ import (
 	"log"
 )
 
-type Cfg struct {
-	wifiName string
-	usbName string
-}
-
-func readConfig(pathname string) (cfg *Cfg, err error) {
-	file, err := ioutil.ReadFile("config.yml")
+func readConfig(pathname string) (err error) {
+	file, err := ioutil.ReadFile(pathname)
 	if err != nil {
 		log.Printf("Couldn't read config file: %v", err)
-		return nil, err
+		return err
 	}
 	yamlString := string(file)
 
 	conf, err := config.ParseYaml(yamlString)
 	if err != nil {
 		log.Printf("Couldn't parse config file: %v", err)
-		return nil, err
+		return  err
 	}
-	cfg.wifiName, err = conf.String("devices.interface")
+	WiFi, err = conf.String("devices.interface")
 	if err != nil {
-		return nil, err
+		return err
 	}
-	cfg.usbName = conf.String("devices.usbport")
+	usb, err = conf.String("devices.usbport")
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return cfg, nil
+	return nil
 }

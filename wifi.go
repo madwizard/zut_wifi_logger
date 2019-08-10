@@ -106,18 +106,11 @@ func WiFiParse(NIC string) *[]wifiData {
 func Scanner(stop chan bool) {
 	stopscanner := false
 
-
-	WIFI, err := setWiFiInterface("config.yml")
-	if err != nil {
-		log.Fatal("Scanner: Can't read config file!")
-	}
-
-
 	log.Println("Scanner: starting")
 
 	for {
 		var ScannedData *[]wifiData
-		ScannedData = WiFiParse(WIFI)
+		ScannedData = WiFiParse(WiFi)
 
 		now := time.Now()
 		timestamp := now.Unix()

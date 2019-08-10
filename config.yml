@@ -1,0 +1,3 @@
+devices:
+  interface: wlp0s20f3
+  usbport: ttyUSB0
