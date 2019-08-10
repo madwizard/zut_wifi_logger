@@ -45,7 +45,7 @@ func pack(input string) *wifiData{
 			continue
 		}
 		if strings.Contains(line, "Address: ") {
-			scannedData.MAC = returnData(line, "Address: ")
+			scannedData.MAC = strings.Replace(returnData(line, "Address: "), string('"'), "", -1)
 		}
 		if strings.Contains(line, "Channel:") {
 			scannedData.Channel, _ = strconv.Atoi(returnData(line, "Channel:"))
@@ -60,7 +60,7 @@ func pack(input string) *wifiData{
 			scannedData.Enc = returnData(line, "Encryption key:")
 		}
 		if strings.Contains(line, "ESSID") {
-			scannedData.ESSID = returnData(line, "ESSID:")
+			scannedData.ESSID = strings.Replace(returnData(line, "ESSID:"), string('"'), "", -1)
 		}
 	} // End of for
 	return &scannedData
