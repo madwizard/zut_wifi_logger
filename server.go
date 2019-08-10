@@ -17,7 +17,7 @@ func init(){
 }
 
 func main() {
-	go wwwServer()
+	wwwServer()
 }
 
 type ServerStatus struct {
@@ -29,19 +29,6 @@ type ServerStatus struct {
 func home(w http.ResponseWriter, r *http.Request) {
 	data := ServerStatus{true, true, time.Now()}
 	err := tmpl.ExecuteTemplate(w, "index.html", data)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-	}
-}
-
-func status(w http.ResponseWriter, r *http.Request) {
-	serverStatus := ServerStatus{
-		WiFiScanUp: true,
-		GPSScanUp: true,
-	}
-
-	err := tmpl.ExecuteTemplate(w, "status.html", serverStatus)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
@@ -83,7 +70,6 @@ func wwwServer() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", home)
-	r.HandleFunc("/status", status)
 	r.HandleFunc("/data", data)
 	r.HandleFunc("/map", rendermap)
 	r.NotFoundHandler = http.HandlerFunc(NotFound)
