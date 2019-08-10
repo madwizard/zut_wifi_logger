@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/adrianmo/go-nmea"
 	"go.bug.st/serial.v1"
 	"log"
 	"strconv"
 	"strings"
-	"github.com/adrianmo/go-nmea"
 	"time"
 )
 
@@ -39,12 +39,17 @@ func InitGPS(portDevice string) (serial.Port) {
 }
 
 func ReadGPS(port serial.Port) string {
-	buff := make([]byte, 300)
-	n, err := port.Read(buff)
+	buff := make([]byte, 1)
+	var ret strings.Builder
+
+	for string(buff[0]) != "\n" {
+	_, err := port.Read(buff)
 	if err != nil {
 		log.Printf("Couldn't read GPS coords")
 	}
-	return string(buff[:n])
+		ret.WriteString(string(buff[0]))
+	}
+	return ret.String()
 }
 
 func writeGpsData(input string) {
@@ -52,7 +57,6 @@ func writeGpsData(input string) {
 
 	for _, line := range lines {
 		if strings.Contains(line, "GNRMC") {
-			if len(line) >= 74 {
 				line = strings.TrimSuffix(line, "\n")
 				s, err := nmea.Parse(line)
 				if err != nil {
@@ -63,15 +67,29 @@ func writeGpsData(input string) {
 					m := s.(nmea.RMC)
 					now := time.Now()
 					GPSdata.Timestamp = strconv.FormatInt(now.Unix(), 10)
-					GPSdata.Latitude = nmea.FormatGPS(m.Latitude)
-					GPSdata.Longitute = nmea.FormatGPS(m.Longitude)
-					log.Println("Longitude  " + GPSdata.Longitute + "Latitude " + GPSdata.Latitude)
+					GPSdata.Latitude = convertDMStoDec(nmea.FormatGPS(m.Latitude))
+					GPSdata.Longitute = convertDMStoDec(nmea.FormatGPS(m.Longitude))
 				}
-			}
 		} else {
 			continue
 		}
 	}
+}
+
+func convertDMStoDec(data string) string {
+	var ret strings.Builder
+	tmp := strings.Split(data, ".")
+	tmp1 := tmp[0]
+	secDec := tmp[1]
+	minDeg := tmp1[len(tmp1)-2:]
+	degDec := tmp1[:len(tmp1)-2]
+
+	minutes, _ := strconv.Atoi(minDeg)
+	minutes *= 100
+	minutes = minutes / 60
+
+	ret.WriteString(degDec + "." + strconv.Itoa(minutes) + secDec)
+	return ret.String()
 }
 
 func gpsScanner(stop chan bool) {
