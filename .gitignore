@@ -15,6 +15,8 @@
 gowifiscanner
 wifiscanner
 main
+scanner
+server
 
 # some trash made by GoLand
 .idea/
