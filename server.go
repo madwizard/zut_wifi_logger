@@ -1,9 +1,8 @@
 package main
 
 import (
-	"html/template"
-	"github.com/goji/httpauth"
 	"github.com/gorilla/mux"
+	"html/template"
 	"log"
 	"net/http"
 	"time"
@@ -73,7 +72,7 @@ func wwwServer() {
 	r.HandleFunc("/data", data)
 	r.HandleFunc("/map", rendermap)
 	r.NotFoundHandler = http.HandlerFunc(NotFound)
-	http.Handle("/", httpauth.SimpleBasicAuth("user", "pass")(r))
+	http.Handle("/", r)
 
 	log.Print("Starting server www")
 

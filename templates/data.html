@@ -18,6 +18,7 @@
             <th>WPA</th>
             <th>Latitude</th>
             <th>Longitude</th>
+            <th>Read from HAT</th>
         </tr>
 {{range .}}
     <tr>
@@ -35,6 +36,7 @@
         <td>{{.WPA}}</td>
         <td>{{.Latitude}}</td>
         <td>{{.Longitude}}</td>
+        <td>{{.GPSRead}}</td>
     </tr>
 {{end}}
     </table>

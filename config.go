@@ -16,6 +16,7 @@ type GpsData struct {
 	Timestamp string
 	Latitude string
 	Longitute string
+	GPSRead	bool		// Were we able to read GPS?
 }
 
 // Example scanned data is in docs/example_WiFiScanData
@@ -48,6 +49,7 @@ type webdata struct {
 	WPA string `json:"wpa"`				// WPA version
 	Latitude string `json:"Latitude"`
 	Longitude string `json:"Longitude"`
+	GPSRead bool
 }
 
 func readConfig(pathname string) (err error) {

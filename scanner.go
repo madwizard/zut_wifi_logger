@@ -28,6 +28,7 @@ func main() {
 	GPSdata.Timestamp = "00000000"
 	GPSdata.Latitude = "00000000"
 	GPSdata.Longitute = "00000000"
+	GPSdata.GPSRead = false
 
 	// Gracefully close down
 	sigs := make(chan os.Signal, 1)

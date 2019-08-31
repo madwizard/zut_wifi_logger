@@ -63,6 +63,7 @@ func writeGpsData(input string) {
 					GPSdata.Timestamp = strconv.FormatInt(now.Unix(), 10)
 					GPSdata.Latitude = convertDMStoDec(nmea.FormatGPS(m.Latitude))
 					GPSdata.Longitute = convertDMStoDec(nmea.FormatGPS(m.Longitude))
+					GPSdata.GPSRead = true
 				}
 		} else {
 			continue
