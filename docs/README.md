@@ -39,3 +39,21 @@ To generate self signed certificate without password:
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -subj '/CN=wifiscanner' -nodes
 
 The pair in docs is for testing only
+
+## Building:
+to build for intel run:
+make intel
+
+to build for arm5 run:
+make arm
+
+### Prerequisites:
+go get github.com/adrianmo/go-nmea
+go get github.com/mattn/go-sqlite3
+go get github.com/olebedev/config  
+go get go.bug.st/serial.v1 
+
+You also need sqlite3 to run database.
+
+## Configuration
+Edit attached copnfig.yml to suit your operating environment.
