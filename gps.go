@@ -25,6 +25,8 @@ func InitGPS(portDevice string) (serial.Port) {
 		return nil
 	}
 
+	startGPS = true
+	
 	_, err = port.Write([]byte("AT+CGNSPWR=1\r\nAT+CGNSSEQ=\"RMC\"\r\nAT+CGNSINF\r\nAT+CGNSURC=2\r\nAT+CGNSTST=1\r\n"))
 
 	if err != nil {
