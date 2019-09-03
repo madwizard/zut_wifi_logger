@@ -52,8 +52,9 @@ go get github.com/adrianmo/go-nmea
 go get github.com/mattn/go-sqlite3
 go get github.com/olebedev/config  
 go get go.bug.st/serial.v1 
+go get github.com/gorilla/mux 
 
-You also need sqlite3 to run database.
+You also need sqlite3 to run database and iwlist command.
 
 ## Configuration
 Edit attached copnfig.yml to suit your operating environment.
