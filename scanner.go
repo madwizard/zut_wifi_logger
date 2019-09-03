@@ -34,7 +34,9 @@ func main() {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
-	go gpsScanner(stopGpsScanner)
+	if startGPS == true {
+		go gpsScanner(stopGpsScanner)
+	}
 	go Scanner(stopScanner)
 
 	sig := <- sigs
