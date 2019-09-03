@@ -20,7 +20,9 @@ func InitGPS(portDevice string) (serial.Port) {
 
 	port, err := serial.Open("/dev/" + portDevice, mode)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("%v", err)
+		startGPS = false
+		return nil
 	}
 
 	_, err = port.Write([]byte("AT+CGNSPWR=1\r\nAT+CGNSSEQ=\"RMC\"\r\nAT+CGNSINF\r\nAT+CGNSURC=2\r\nAT+CGNSTST=1\r\n"))
