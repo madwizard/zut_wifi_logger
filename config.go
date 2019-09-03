@@ -11,6 +11,7 @@ var port serial.Port
 var usb string
 var WiFi string
 var GPSdata GpsData
+var startGPS bool
 
 type GpsData struct {
 	Timestamp string
