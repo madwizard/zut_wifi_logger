@@ -42,11 +42,13 @@ func ReadGPS(port serial.Port) string {
 
 	for string(buff[0]) != "\n" {
 	_, err := port.Read(buff)
-	if err != nil {
-		log.Printf("Couldn't read GPS coords")
-	}
+		if err != nil {
+			log.Printf("Couldn't read GPS coords")
+		}
+		log.Printf("%v", string(buff[0]))
 		ret.WriteString(string(buff[0]))
 	}
+	log.Printf("GPS DATA: %v", ret.String())
 	return ret.String()
 }
 
@@ -79,15 +81,16 @@ func convertDMStoDec(data string) string {
 	var ret strings.Builder
 	tmp := strings.Split(data, ".")
 	tmp1 := tmp[0]
-	secDec := tmp[1]
-	minDeg := tmp1[len(tmp1)-2:]
-	degDec := tmp1[:len(tmp1)-2]
+	secDec, _ := strconv.Atoi(tmp[1])						// Seconds Decimal
+	minDec, _ := strconv.Atoi(tmp1[len(tmp1)-2:])			// Minutes Decimal
+	degDec, _ := strconv.Atoi(tmp1[:len(tmp1)-2])			// Seconds Decimal
 
-	minutes, _ := strconv.Atoi(minDeg)
-	minutes *= 100
-	minutes = minutes / 60
+	minDec *= 100
+	minDec = minDec / 60
+	minDec = minDec + secDec
 
-	ret.WriteString(degDec + "." + strconv.Itoa(minutes) + secDec)
+	ret.WriteString(strconv.Itoa(degDec) + "." + strconv.Itoa(minDec))
+	// ret.WriteString(degDec + "." + strconv.Itoa(minutes) + secDec)
 	return ret.String()
 }
 
